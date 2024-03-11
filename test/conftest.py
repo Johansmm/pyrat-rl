@@ -27,6 +27,7 @@ def random_ai(tmp_path_factory):
     with open(program_path, "wb") as f:
         f.write(program)
 
-    # Include base directory in python path, enabling to recognize program by importlib
+    # Include base directory in python path, enabling to recognize program by importlib/cli
+    os.environ["PYTHONPATH"] = program_path.parts[0]
     sys.path.append(program_path.parts[0])
     return from_path_to_program(program_path)
