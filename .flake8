@@ -1,0 +1,6 @@
+[flake8]
+extend-ignore = W605
+per-file-ignores =
+    __init__.py:F401,F403,F405
+max-line-length = 100
+extend-select = E225,E226
