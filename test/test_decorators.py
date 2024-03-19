@@ -24,11 +24,11 @@ def test_handled_arguments():
         _handle_arguments(func_to_wrapper, arg_names, unsupported_arg="value")
 
 
-@pytest.mark.parametrize("decorator_fn, num_args",
-                         [(decorator.preprocessing, 9),
-                          (decorator.postprocessing, 12),
-                          (decorator.turn, 11)],
-                         ids=["preprocessing", "postprocessing", "turn"])
+@pytest.mark.parametrize(
+    "decorator_fn, num_args",
+    [(decorator.preprocessing, 9), (decorator.postprocessing, 12), (decorator.turn, 11)],
+    ids=["preprocessing", "postprocessing", "turn"],
+)
 def test_decorators(decorator_fn, num_args):
     # We must instance fake_fn globally to avoid local references, incompatible with pickle
     global fake_fn

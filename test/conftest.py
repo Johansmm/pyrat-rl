@@ -14,8 +14,8 @@ def turn(*args):
 
 def from_path_to_program(path):
     # A program must follow the format <package>.<subpackage>...<program>
-    program = os.path.splitext(str(path))[0].replace(os.sep, '.')
-    if program.startswith('C:.'):
+    program = os.path.splitext(str(path))[0].replace(os.sep, ".")
+    if program.startswith("C:."):
         # Remove 'C:' in windows
         program = program[3:]
     return program

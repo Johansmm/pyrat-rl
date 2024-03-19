@@ -20,4 +20,5 @@ def suppress_output():
 # Import pyrat arguments inside of suppress_output context to support new arguments
 with suppress_output():
     import pyrat
+
     parser = pyrat.parser

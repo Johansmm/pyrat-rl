@@ -26,11 +26,13 @@ def load_players(program_names):
         except AttributeError as error:
             raise AttributeError(f"Unsupported player: {str(error)}")
         team_name = f"team_{idx+1}"
-        players.append({
-            "name": f"{team_name}:{os.path.splitext(os.path.basename(player_spec))[0]}",
-            "team": team_name,
-            "preprocessing_function": player.__dict__.get("preprocessing", None),
-            "turn_function": player_turn_fn,
-            "postprocessing_function": player.__dict__.get("postprocessing", None)
-        })
+        players.append(
+            {
+                "name": f"{team_name}:{os.path.splitext(os.path.basename(player_spec))[0]}",
+                "team": team_name,
+                "preprocessing_function": player.__dict__.get("preprocessing", None),
+                "turn_function": player_turn_fn,
+                "postprocessing_function": player.__dict__.get("postprocessing", None),
+            }
+        )
     return players
