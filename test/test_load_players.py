@@ -25,8 +25,8 @@ def test_load_player(random_ai):
     assert player["postprocessing_function"] is None
 
     # Run a fake turn: this program choose a random action
-    possible_actions = ["R", "L", "U", "D"]
-    action = player["turn_function"](possible_actions=possible_actions)
+    possible_actions = ["north", "east", "south", "west"]
+    action = player["turn_function"]()
     assert action in possible_actions
 
 
