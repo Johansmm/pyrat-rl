@@ -2,7 +2,7 @@ name: Pull request workflows
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: "main"
     types: ["opened", "synchronize"]
   push:
     branches: ["main"]
