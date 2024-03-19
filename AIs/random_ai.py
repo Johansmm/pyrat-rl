@@ -9,8 +9,8 @@ from src.ai_tools import decorator
 
 
 @decorator.turn
-def turn(possible_actions,):
-    """ Return a random action from the possible ones.
+def turn(possible_actions):
+    """Return a random action from the possible ones.
 
     Parameters
     ----------

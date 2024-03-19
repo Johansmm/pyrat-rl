@@ -9,14 +9,14 @@ def _handle_arguments(func, arg_names, /, *args, **kwargs):
         if name not in arg_names:
             raise TypeError(f"{func.__name__} got an unexpected keyword argument '{name}'")
     # Clean arguments: transfer only those were defined by func
-    full_kwargs = {**{k: v for k, v in zip(arg_names[:len(args)], args)}, **kwargs}
+    full_kwargs = {**{k: v for k, v in zip(arg_names[: len(args)], args)}, **kwargs}
     new_kwargs = {k: v for k, v in full_kwargs.items() if k in func.__code__.co_varnames}
     return new_kwargs
 
 
 class decorator:
-    """Class that embeds the different decorators
-    """
+    """Class that embeds the different decorators"""
+
     @staticmethod
     def preprocessing(func):
         """Decorator that removes parameters that are not used by preprocessing
@@ -37,12 +37,23 @@ class decorator:
         callable
             the wrapped function
         """
+
         @wraps(func)
         def wrapper(*args, **kwargs):
-            arg_names = ['maze', 'maze_width', 'maze_height', 'name', 'teams',
-                         'player_locations', 'cheese', 'possible_actions', 'memory']
+            arg_names = [
+                "maze",
+                "maze_width",
+                "maze_height",
+                "name",
+                "teams",
+                "player_locations",
+                "cheese",
+                "possible_actions",
+                "memory",
+            ]
             new_kwargs = _handle_arguments(func, arg_names, *args, **kwargs)
             return func(**new_kwargs)
+
         return wrapper
 
     @staticmethod
@@ -65,13 +76,26 @@ class decorator:
         callable
             the wrapped function
         """
+
         @wraps(func)
         def wrapper(*args, **kwargs):
-            arg_names = ['maze', 'maze_width', 'maze_height', 'name', 'teams', 'player_locations',
-                         'player_scores', 'player_muds', 'cheese', 'possible_actions', 'memory',
-                         'stats']
+            arg_names = [
+                "maze",
+                "maze_width",
+                "maze_height",
+                "name",
+                "teams",
+                "player_locations",
+                "player_scores",
+                "player_muds",
+                "cheese",
+                "possible_actions",
+                "memory",
+                "stats",
+            ]
             new_kwargs = _handle_arguments(func, arg_names, *args, **kwargs)
             return func(**new_kwargs)
+
         return wrapper
 
     @staticmethod
@@ -94,10 +118,23 @@ class decorator:
         callable
             the wrapped function
         """
+
         @wraps(func)
         def wrapper(*args, **kwargs):
-            arg_names = ['maze', 'maze_width', 'maze_height', 'name', 'teams', 'player_locations',
-                         'player_scores', 'player_muds', 'cheese', 'possible_actions', 'memory']
+            arg_names = [
+                "maze",
+                "maze_width",
+                "maze_height",
+                "name",
+                "teams",
+                "player_locations",
+                "player_scores",
+                "player_muds",
+                "cheese",
+                "possible_actions",
+                "memory",
+            ]
             new_kwargs = _handle_arguments(func, arg_names, *args, **kwargs)
             return func(**new_kwargs)
+
         return wrapper
