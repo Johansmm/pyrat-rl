@@ -96,3 +96,60 @@ def test_value_to_location_ko():
 
     with pytest.raises(ValueError, match="Maze sizes must be equal"):
         decorated_fn(Location(9, 2, 10), Location(1, 10, 2))
+
+
+@pytest.mark.parametrize(
+    "x1, p2, expected", [[37, 88, 6], [54, Location(54, 10, 10), 0]], ids=["diff", "same"]
+)
+def test_compute_distance(x1, p2, expected):
+    p1 = Location(x1, 10, 10)
+    assert p1.compute_distance(p2) == expected
+
+
+@pytest.mark.parametrize(
+    "x, target, exp_move",
+    [
+        [Location(45, 10, 10), 30, "up"],
+        [Location(45, 10, 10), 70, "down"],
+        [Location(45, 10, 10), 42, "left"],
+        [Location(45, 10, 10), 47, "right"],
+        [Location(45, 10, 10), 45, "nothing"],
+    ],
+    ids=["up", "down", "left", "right", "nothing"],
+)
+@pytest.mark.parametrize(
+    "possible_actions",
+    [None, ["NOTHING", "UP", "RIGHT", "DOWN", "LEFT"]],
+    ids=["default", "others"],
+)
+def test_choose_action(x, target, exp_move, possible_actions):
+    if possible_actions is not None:
+        exp_move = exp_move.upper()
+    assert x.choose_action(target, possible_actions=possible_actions) == exp_move
+
+
+@pytest.mark.parametrize(
+    "location, action, expected",
+    [
+        [Location(37, 10, 10), "up", 27],
+        [Location(37, 10, 10), "down", 47],
+        [Location(37, 10, 10), "right", 38],
+        [Location(37, 10, 10), "left", 36],
+        [Location(37, 10, 10), "nothing", 37],
+        [Location(9, 10, 10), "up", 9],
+        [Location(90, 10, 10), "down", 90],
+        [Location(49, 10, 10), "right", 49],
+        [Location(60, 10, 10), "left", 60],
+    ],
+    ids=["up", "down", "right", "left", "nothing", "uclip", "dclip", "rclip", "lclip"],
+)
+@pytest.mark.parametrize(
+    "possible_actions",
+    [None, ["NOTHING", "UP", "RIGHT", "DOWN", "LEFT"]],
+    ids=["default", "others"],
+)
+def test_play_action(location, action, possible_actions, expected):
+    if possible_actions:
+        action = action.upper()
+    new_location = location.play_action(action=action, possible_actions=possible_actions)
+    assert new_location == expected

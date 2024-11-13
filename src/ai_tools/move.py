@@ -81,6 +81,84 @@ class Location:
     def coordinates(self):
         return np.divmod(self.loc, self.width)[::-1]
 
+    def compute_distance(self, other):
+        """Calculate the distance between locations
+
+        Parameters
+        ----------
+        other : Location
+            Second location to compute distance
+        """
+        x, y = self.__sub__(other)
+        return abs(x) + abs(y)
+
+    def choose_action(self, target, possible_actions=None):
+        """Choose the action that the agent must take to reach the target
+
+        Given that one agent only moves once and can't move diagonally, it suffices to move in
+        the direction of the target, moving vertically first and then horizontally
+
+        Parameters
+        ----------
+        target : Location
+            Target location
+        possible_actions : List[str], optional
+            List of possible actions, by default None
+
+        Returns
+        -------
+        str
+            The suggested action
+        """
+        if possible_actions is None:
+            possible_actions = list(Moves.__members__)
+        dx, dy = self.__sub__(target)
+        if dy < 0:
+            return possible_actions[Moves.up.value]
+        if dy > 0:
+            return possible_actions[Moves.down.value]
+        if dx < 0:
+            return possible_actions[Moves.right.value]
+        if dx > 0:
+            return possible_actions[Moves.left.value]
+        # We are in the target !
+        return possible_actions[Moves.nothing.value]
+
+    def play_action(self, action: str, possible_actions: list[str] = None):
+        """Update location with the desired action
+
+        Parameters
+        ----------
+        action : str
+            One of `possible_actions`
+        possible_actions : List[str], optional
+            List of possible actions, by default None
+
+        Returns
+        -------
+        Location
+            The updated location
+        """
+        if possible_actions is None:
+            possible_actions = list(Moves.__members__)
+
+        delta = 0
+        x, y = self.coordinates
+        match possible_actions.index(action):
+            case Moves.up.value:
+                if y > 0:
+                    delta = -self.width
+            case Moves.down.value:
+                if y < self.height - 1:
+                    delta = self.width
+            case Moves.right.value:
+                if x < self.width - 1:
+                    delta = 1
+            case Moves.left.value:
+                if x > 0:
+                    delta = -1
+        return Location(self.loc + delta, self.width, self.height)
+
     @value_to_location()
     def __eq__(self, value):
         return repr(self) == repr(value)
