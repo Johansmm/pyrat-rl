@@ -1,6 +1,33 @@
 __all__ = ["Location"]
 
 from enum import Enum, auto
+import numpy as np
+
+
+def value_to_location(check_maze=False):
+    def decorator(fn):
+        def process_value(self, *values):
+            lvalues = []
+            for value in values:
+                if not isinstance(value, Location):
+                    value = Location(value, self.width, self.height)
+                lvalues.append(value)
+            if check_maze:
+                if self.height is None or self.width is None:
+                    raise ValueError(
+                        f"Maze width/height must be defined when calling '{fn.__name__}'."
+                    )
+                if any(self.width != v.width or self.height != v.height for v in lvalues):
+                    str_values = [str(self)] + [str(loc) for loc in lvalues]
+                    raise ValueError(
+                        f"Unsupported {fn.__name__}({', '.join(str_values)}): "
+                        "Maze sizes must be equal."
+                    )
+            return fn(self, *lvalues)
+
+        return process_value
+
+    return decorator
 
 
 class Moves(Enum):
@@ -48,3 +75,21 @@ class Location:
             except Exception as e:
                 raise ValueError(f"Unrecognized {new_loc}. Detail:{str(e)}.")
         self._loc = _loc
+
+    @property
+    @value_to_location(check_maze=True)
+    def coordinates(self):
+        return np.divmod(self.loc, self.width)[::-1]
+
+    @value_to_location()
+    def __eq__(self, value):
+        return repr(self) == repr(value)
+
+    @value_to_location(check_maze=True)
+    def __sub__(self, value):
+        x, y = self.coordinates
+        xv, yv = value.coordinates
+        return (x - xv, yv - y)
+
+    def __repr__(self):
+        return f"Location({self.loc}, {self.width}, {self.height})"
